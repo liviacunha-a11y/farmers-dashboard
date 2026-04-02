@@ -4,7 +4,6 @@ function Card({ label, value, sub, color }) {
     red: 'border-red-400 bg-red-50 text-red-700',
     yellow: 'border-yellow-400 bg-yellow-50 text-yellow-700',
     blue: 'border-blue-400 bg-blue-50 text-blue-700',
-    green: 'border-green-400 bg-green-50 text-green-700',
   }
   return (
     <div className={`border-l-4 rounded-xl p-4 shadow-sm ${colors[color]}`}>
@@ -17,12 +16,9 @@ function Card({ label, value, sub, color }) {
 
 export default function SummaryCards({ inactivePartners, stuckDeals, partnerRanking }) {
   const topPartner = partnerRanking[0]
-  const avgConversion = partnerRanking.length > 0
-    ? (partnerRanking.reduce((acc, p) => acc + Number(p.conversao_pct || 0), 0) / partnerRanking.length).toFixed(1)
-    : null
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-3 gap-4">
       <Card label="Parceiros Inativos" value={inactivePartners.length} color="red" sub="+30 dias sem indicação" />
       <Card label="Deals Parados" value={stuckDeals.length} color="yellow" sub="sem movimentação" />
       <Card
@@ -30,12 +26,6 @@ export default function SummaryCards({ inactivePartners, stuckDeals, partnerRank
         value={topPartner?.parceiro?.split(' ').slice(0, 2).join(' ') ?? '—'}
         color="blue"
         sub={topPartner ? `${topPartner.total_indicacoes} indicações` : null}
-      />
-      <Card
-        label="Conversão Média"
-        value={avgConversion ? `${avgConversion}%` : '—'}
-        color="green"
-        sub="indicações → ganhos"
       />
     </div>
   )

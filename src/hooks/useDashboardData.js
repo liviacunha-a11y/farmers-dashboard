@@ -5,7 +5,6 @@ import { fetchFarmers, fetchDashboard } from '../api/dashboard'
 export function useDashboardData() {
   const [farmers, setFarmers] = useState([])
   const [selectedFarmer, setSelectedFarmer] = useState('')
-  const [stuckDays, setStuckDays] = useState(7)
   const [data, setData] = useState({ inactivePartners: [], stuckDeals: [], partnerRanking: [] })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -23,13 +22,13 @@ export function useDashboardData() {
     if (!selectedFarmer) return
     setLoading(true)
     setError(null)
-    fetchDashboard(selectedFarmer, stuckDays)
+    fetchDashboard(selectedFarmer)
       .then(setData)
       .catch(err => setError(err.message))
       .finally(() => setLoading(false))
-  }, [selectedFarmer, stuckDays])
+  }, [selectedFarmer])
 
   useEffect(() => { refresh() }, [refresh])
 
-  return { farmers, selectedFarmer, setSelectedFarmer, stuckDays, setStuckDays, data, loading, error, refresh }
+  return { farmers, selectedFarmer, setSelectedFarmer, data, loading, error, refresh }
 }

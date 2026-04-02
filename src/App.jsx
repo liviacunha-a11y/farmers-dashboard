@@ -40,7 +40,6 @@ function Skeleton() {
 export default function App() {
   const {
     farmers, selectedFarmer, setSelectedFarmer,
-    stuckDays, setStuckDays,
     data, loading, error, refresh,
   } = useDashboardData()
 
@@ -57,8 +56,6 @@ export default function App() {
           farmers={farmers}
           selectedFarmer={selectedFarmer}
           onFarmerChange={setSelectedFarmer}
-          stuckDays={stuckDays}
-          onStuckDaysChange={setStuckDays}
           onRefresh={refresh}
         />
 

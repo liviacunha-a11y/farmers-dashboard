@@ -2,16 +2,15 @@
 require('dotenv').config({ path: require('path').join(__dirname, '../../.env') })
 const axios = require('axios')
 const { registerActivity } = require('../pipedriveClient')
-const extensions = require('../farmer-extensions.json')
+const { getExtensionByFarmerName } = require('../api4comClient')
 
 async function executeCall({ dealId, orgId, phone, farmerName }) {
-  const extension = extensions[farmerName]
-  if (!extension) throw new Error(`Ramal não configurado para ${farmerName}`)
+  const extension = await getExtensionByFarmerName(farmerName)
 
   await axios.post(
     `${process.env.API4COM_BASE_URL}/calls`,
     { extension, destination: phone },
-    { headers: { Authorization: `Bearer ${process.env.API4COM_API_KEY}` } }
+    { headers: { Authorization: process.env.API4COM_API_KEY } }
   )
 
   await registerActivity({

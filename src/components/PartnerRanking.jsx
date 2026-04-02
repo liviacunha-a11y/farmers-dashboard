@@ -1,4 +1,6 @@
 // src/components/PartnerRanking.jsx
+import { useState } from 'react'
+
 function ConversionBar({ pct }) {
   const value = Math.min(Number(pct) || 0, 100)
   const color = value >= 20 ? 'bg-green-500' : value >= 10 ? 'bg-yellow-500' : 'bg-red-400'
@@ -13,6 +15,9 @@ function ConversionBar({ pct }) {
 }
 
 export default function PartnerRanking({ ranking }) {
+  const [showAll, setShowAll] = useState(false)
+  const visible = showAll ? ranking : ranking.slice(0, 10)
+
   if (ranking.length === 0) {
     return <div className="text-center py-8 text-gray-400 text-sm">Nenhuma indicação registrada</div>
   }
@@ -31,10 +36,19 @@ export default function PartnerRanking({ ranking }) {
           </tr>
         </thead>
         <tbody>
-          {ranking.map((p, i) => (
+          {visible.map((p, i) => (
             <tr key={p.org_id} className="border-b border-gray-100 hover:bg-gray-50">
               <td className="py-3 pr-4 text-gray-400 text-xs">{i + 1}</td>
-              <td className="py-3 pr-4 font-medium text-gray-800">{p.parceiro}</td>
+              <td className="py-3 pr-4 font-medium">
+                <a
+                  href={`https://seazone-fd92b9.pipedrive.com/organization/${p.org_id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  {p.parceiro}
+                </a>
+              </td>
               <td className="py-3 pr-4 text-right font-semibold text-blue-600">{p.total_indicacoes}</td>
               <td className="py-3 pr-4 text-right font-semibold text-green-600">{p.total_ganhos}</td>
               <td className="py-3 pr-4"><ConversionBar pct={p.conversao_pct} /></td>
@@ -45,6 +59,14 @@ export default function PartnerRanking({ ranking }) {
           ))}
         </tbody>
       </table>
+      {ranking.length > 10 && (
+        <button
+          onClick={() => setShowAll(v => !v)}
+          className="mt-3 text-sm text-blue-600 hover:underline"
+        >
+          {showAll ? 'Ver menos ▲' : `Ver mais ${ranking.length - 10} parceiros ▼`}
+        </button>
+      )}
     </div>
   )
 }

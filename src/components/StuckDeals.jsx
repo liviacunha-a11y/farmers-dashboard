@@ -1,4 +1,5 @@
 // src/components/StuckDeals.jsx
+import { useState } from 'react'
 import ActionButton from './ActionButton'
 import { triggerAction } from '../api/dashboard'
 
@@ -19,6 +20,9 @@ function buildPayload(deal, farmerName) {
 }
 
 export default function StuckDeals({ deals, farmerName }) {
+  const [showAll, setShowAll] = useState(false)
+  const visible = showAll ? deals : deals.slice(0, 10)
+
   if (deals.length === 0) {
     return (
       <div className="text-center py-8 text-gray-400 text-sm">
@@ -40,10 +44,28 @@ export default function StuckDeals({ deals, farmerName }) {
           </tr>
         </thead>
         <tbody>
-          {deals.map(d => (
+          {visible.map(d => (
             <tr key={d.deal_id} className="border-b border-gray-100 hover:bg-gray-50">
-              <td className="py-3 pr-4 font-medium text-gray-800">{d.deal_title}</td>
-              <td className="py-3 pr-4 text-gray-600">{d.org_name}</td>
+              <td className="py-3 pr-4 font-medium">
+                <a
+                  href={`https://seazone-fd92b9.pipedrive.com/deal/${d.deal_id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  {d.deal_title}
+                </a>
+              </td>
+              <td className="py-3 pr-4 text-gray-600">
+                <a
+                  href={`https://seazone-fd92b9.pipedrive.com/organization/${d.org_id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-gray-600 hover:underline"
+                >
+                  {d.org_name}
+                </a>
+              </td>
               <td className="py-3 pr-4 text-gray-600">{formatDate(d.ultima_atividade)}</td>
               <td className="py-3 pr-4">
                 <span className="bg-yellow-100 text-yellow-700 text-xs font-semibold px-2 py-0.5 rounded-full">
@@ -53,12 +75,19 @@ export default function StuckDeals({ deals, farmerName }) {
               <td className="py-3 flex gap-2">
                 <ActionButton icon="📞" label="Ligar" action={() => triggerAction('call', buildPayload(d, farmerName))} />
                 <ActionButton icon="💬" label="WhatsApp" action={() => triggerAction('whatsapp', buildPayload(d, farmerName))} />
-                <ActionButton icon="📧" label="Email" action={() => triggerAction('email', buildPayload(d, farmerName))} />
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      {deals.length > 10 && (
+        <button
+          onClick={() => setShowAll(v => !v)}
+          className="mt-3 text-sm text-blue-600 hover:underline"
+        >
+          {showAll ? 'Ver menos ▲' : `Ver mais ${deals.length - 10} deals ▼`}
+        </button>
+      )}
     </div>
   )
 }

@@ -7,8 +7,8 @@ export async function fetchFarmers() {
   return res.json()
 }
 
-export async function fetchDashboard(farmer, stuckDays = 7) {
-  const params = new URLSearchParams({ farmer, stuckDays })
+export async function fetchDashboard(farmer) {
+  const params = new URLSearchParams({ farmer })
   const res = await fetch(`${BASE}/dashboard?${params}`)
   if (!res.ok) throw new Error('Erro ao buscar dados do dashboard')
   return res.json()
