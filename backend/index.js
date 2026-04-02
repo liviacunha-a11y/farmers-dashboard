@@ -12,6 +12,10 @@ const {
   interpolate,
 } = require('./queries')
 
+const { executeCall } = require('./actions/call')
+const { executeWhatsapp } = require('./actions/whatsapp')
+const { executeEmail } = require('./actions/email')
+
 const app = express()
 app.use(cors())
 app.use(express.json())
@@ -76,6 +80,33 @@ app.get('/api/dashboard', async (req, res) => {
         contact: contactMap[row[1]] || {},
       })),
     })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.post('/api/actions/call', async (req, res) => {
+  try {
+    const result = await executeCall(req.body)
+    res.json(result)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.post('/api/actions/whatsapp', async (req, res) => {
+  try {
+    const result = await executeWhatsapp(req.body)
+    res.json(result)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.post('/api/actions/email', async (req, res) => {
+  try {
+    const result = await executeEmail(req.body)
+    res.json(result)
   } catch (err) {
     res.status(500).json({ error: err.message })
   }
